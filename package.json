@@ -3,12 +3,12 @@
 	"description": "Explore an art gallery in your browser.",
 	"version": "1.0.0",
 	"scripts": {
-		"start": "budo src/index.js",
-		"build": "browserify -p tinyify src/index.js | htmlify base.html > build.html",
-		"genList": "node images/generateList.js",
-		"prestart": "npm run genList",
-		"prebuild": "npm run genList"
-	},
+  "start": "budo src/index.js",
+  "build": "browserify -p tinyify src/index.js | htmlify base.html > index.html",
+  "genList": "node images/generateList.js",
+  "prestart": "npm run genList",
+  "prebuild": "npm run genList"
+},
 	"license": "MIT",
 	"dependencies": {
 		"@babel/runtime": "^7.14.8",
