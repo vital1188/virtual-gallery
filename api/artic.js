@@ -1,4 +1,4 @@
-'strict mode';
+'use strict';
 
 // ARTIC API
 const searchURL = 'https://api.artic.edu/api/v1/artworks/search';

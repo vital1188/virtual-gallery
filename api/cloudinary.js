@@ -1,5 +1,7 @@
 'use strict';
 
+const API_ENDPOINT = '/.netlify/functions/getArtworks'; // Add this line
+
 // List of artworks with Cloudinary URLs
 const artworks = [
     {

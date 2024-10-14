@@ -1,4 +1,4 @@
-'strict mode';
+'use strict';
 
 const textHeight = 32;
 const textCanvas = document.createElement('canvas');
