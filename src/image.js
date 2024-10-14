@@ -11,7 +11,7 @@ let unusedTextures = [];
 const dynamicQualThreshold = 2;
 function dynamicQual(quality) {
     if(!navigator.connection || navigator.connection.downlink < dynamicQualThreshold) {
-        quality = (quality == 'high') ? 'mid' : 'low';
+        quality = (quality === 'high') ? 'mid' : 'low';
     }
     return quality;
 }
@@ -25,7 +25,7 @@ let aniso = false;
 
 const emptyImage = (regl) => [
     (unusedTextures.pop() || regl.texture)([[[200, 200, 200]]]),
-    _=>(unusedTextures.pop() || regl.texture)([[[0, 0, 0, 0]]]),
+    _ => (unusedTextures.pop() || regl.texture)([[[0, 0, 0, 0]]]),
     1
 ];
 
@@ -41,17 +41,17 @@ async function loadImage(regl, p, res) {
     try {
         const data = await dataAccess.fetchImage(p, dynamicQual(res));
         title = data.title;
-        if (!data.image) throw new Error('Image blob is null');
         // Resize image to a power of 2 to use mipmap (faster than createImageBitmap resizing)
         image = await createImageBitmap(data.image);
         ctx.drawImage(image, 0, 0, resizeCanvas.width, resizeCanvas.height);
     } catch(e) {
         // Try again with a lower resolution, otherwise return an empty image
         console.error(e);
-        return res == "high" ? await loadImage(regl, p, "mid") : emptyImage(regl);
+        return res === "high" ? await loadImage(regl, p, "low") : emptyImage(regl);
     }
 
-    return [(unusedTextures.pop() || regl.texture)({
+    return [
+        (unusedTextures.pop() || regl.texture)({
             data: resizeCanvas,
             min: 'mipmap',
             mipmap: 'nice',

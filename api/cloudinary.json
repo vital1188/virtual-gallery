@@ -1,0 +1,22 @@
+{
+    "images": [
+        {
+            "title": "Sunset Over Mountains",
+            "file": "https://res.cloudinary.com/dlqfawszf/image/upload/v1728884280/IMG_4008_jm4odm.png",
+            "artist_title": "John Doe",
+            "image_id": "IMG_4008_jm4odm"
+        },
+        {
+            "title": "Abstract Composition",
+            "file": "https://res.cloudinary.com/dlqfawszf/image/upload/v1728884278/IMG_3776_t6yog9.png",
+            "artist_title": "Jane Smith",
+            "image_id": "IMG_3776_t6yog9"
+        },
+        {
+            "title": "City Lights",
+            "file": "https://res.cloudinary.com/dlqfawszf/image/upload/v1728884276/IMG_3311_mblyqk.jpg",
+            "artist_title": "Emily Johnson",
+            "image_id": "IMG_3311_mblyqk"
+        }
+    ]
+}
