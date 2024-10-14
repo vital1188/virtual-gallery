@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = {
-    default: "cloudinary", // Set Cloudinary as the default API
+    default: "cloudinary",
     artic: require("./artic"),
     local: require("./local"),
-    cloudinary: require("./cloudinary") // Add Cloudinary API
+    cloudinary: require("./cloudinary") // Added Cloudinary API
 };
