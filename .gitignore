@@ -114,3 +114,6 @@ build.html
 
 # Allow tracking of images.json
 !images/images.json
+
+
+build/

@@ -90,83 +90,83 @@ function genBorder(n, w, m) {
 
 function splitSegments(segments) {
 	console.time('split segments');
-	segments = segments.map(s => {
-		// Calculate subsegment length
-		let l = Math.hypot(s[1][0] - s[0][0], s[1][1] - s[0][1]);
-		l = Math.ceil(l / 8 - 0.3);
-		if (l <= 0) return { parts: [s], seg: s };
-		// Lerp coordinates
-		let res = [];
-		for (let t = 0; t <= 1; t += 1 / l)
-			res.push([s[0][0] * (1 - t) + s[1][0] * t, s[0][1] * (1 - t) + s[1][1] * t]);
-		// Form pairs of coordinates
-		return {
+    segments = segments.map(s => {
+        // Calculate subsegment length
+        let l = Math.hypot(s[1][0] - s[0][0], s[1][1] - s[0][1]);
+        l = Math.ceil(l / 8 - 0.3);
+        if (l <= 0) return {parts: [s], seg:s};
+        // Lerp coordinates
+        let res = [];
+        for (let t = 0; t <= 1; t += 1 / l)
+            res.push([s[0][0] * (1 - t) + s[1][0] * t, s[0][1] * (1 - t) + s[1][1] * t]);
+        // Form pairs of coordinates
+        return {
 			seg: s,
 			parts: res.slice(0, -1).map((r, i) => [r, res[i + 1]])
 		};
-	});
+    });
 	console.timeEnd('split segments');
 	return segments;
 }
 
 // Apply riffle shuffle to sub-arrays
 function merge(dest, org, aStart, aEnd, bStart, bEnd) {
-	let a = org.slice(aStart, aEnd).reverse();
-	let b = org.slice(bStart, bEnd);
-	let prop = a.length / b.length;
-	while (a.length > 0 && b.length > 0)
-		dest.push(a.length / b.length > prop ? a.pop() : b.pop());
-	while (a.length > 0) dest.push(a.pop());
-	while (b.length > 0) dest.push(b.pop());
-	return dest;
+    let a = org.slice(aStart, aEnd).reverse();
+    let b = org.slice(bStart, bEnd);
+    let prop = a.length / b.length;
+    while (a.length > 0 && b.length > 0)
+        dest.push(a.length / b.length > prop ? a.pop() : b.pop());
+    while (a.length > 0) dest.push(a.pop());
+    while (b.length > 0) dest.push(b.pop());
+    return dest;
 };
 
 function reorderPlacements(placements, r) {
-	console.time('reorder placements');
-	let places = placements;
-	placements = [];
-	let i = 0, j = places.length - 1;
-	let it = [], jt = [], len = 0;
-	//console.log(segs);
-	//debugger;
-	//let temp = [...Array(segs.length)].map((_, i) => i);
-	while (i < j) {
-		let xi = Math.floor((places[i][0][0] + places[i][1][0]) / 4 / r);
-		let yi = Math.floor((places[i][0][1] + places[i][1][1]) / 4 / r);
-		let xj = Math.floor((places[j][0][0] + places[j][1][0]) / 4 / r);
-		let yj = Math.floor((places[j][0][1] + places[j][1][1]) / 4 / r);
-		//console.log(i, j, xi, yi, xj, yj);
-		if (xi == xj && yi == yj) {
-			//console.log("converge");
-			//console.log(temp.slice(i - len, i + 1), temp.slice(j, j + len + 1));
-			merge(placements, places, i - len, i + 1, j, j + len + 1);
-			it = []; jt = []; len = 0;
-		} else {
-			//console.log("diverge");
-			let findi = jt.findIndex(([x, y]) => x === xi && y === yi);
-			let findj = it.findIndex(([x, y]) => x === xj && y === yj);
-			//console.log(findi, findj);
-			if (findi !== -1) {
-				//console.log(temp.slice(i - len, i + 1), temp.slice(j + len - findi, j + len + 1));
-				merge(placements, places, i - len, i + 1, j + len - findi, j + len + 1);
-				j += len - findi; //rollback
-				it = []; jt = []; len = 0;
-			} else if (findj !== -1) {
-				//console.log(temp.slice(j, j + len + 1), temp.slice(i - len, i - len + findj + 1));
-				merge(placements, places, i - len, i - len + findj + 1, j, j + len + 1);
-				i -= len - findj; //rollback
-				it = []; jt = []; len = 0;
-			} else {
-				it.push([xi, yi]);
-				jt.push([xj, yj]);
-				len++;
-			}
-		}
-		i++; j--;
-	}
-	//console.log(temp.slice(i - len, j + len + 1));
-	placements.push(...places.slice(i - len, j + len + 1));
-	console.timeEnd('reorder placements');
+    console.time('reorder placements');
+    let places = placements;
+    placements = [];
+    let i = 0, j = places.length - 1;
+    let it = [], jt = [], len = 0;
+    //console.log(segs);
+    //debugger;
+    //let temp = [...Array(segs.length)].map((_, i) => i);
+    while (i < j) {
+        let xi = Math.floor((places[i][0][0] + places[i][1][0]) / 4 / r);
+        let yi = Math.floor((places[i][0][1] + places[i][1][1]) / 4 / r);
+        let xj = Math.floor((places[j][0][0] + places[j][1][0]) / 4 / r);
+        let yj = Math.floor((places[j][0][1] + places[j][1][1]) / 4 / r);
+        //console.log(i, j, xi, yi, xj, yj);
+        if (xi == xj && yi == yj) {
+            //console.log("converge");
+            //console.log(temp.slice(i - len, i + 1), temp.slice(j, j + len + 1));
+            merge(placements, places, i - len, i + 1, j, j + len + 1);
+            it = []; jt = []; len = 0;
+        } else {
+            //console.log("diverge");
+            let findi = jt.findIndex(([x, y]) => x === xi && y === yi);
+            let findj = it.findIndex(([x, y]) => x === xj && y === yj);
+            //console.log(findi, findj);
+            if (findi !== -1) {
+                //console.log(temp.slice(i - len, i + 1), temp.slice(j + len - findi, j + len + 1));
+                merge(placements, places, i - len, i + 1, j + len - findi, j + len + 1);
+                j += len - findi; //rollback
+                it = []; jt = []; len = 0;
+            } else if (findj !== -1) {
+                //console.log(temp.slice(j, j + len + 1), temp.slice(i - len, i - len + findj + 1));
+                merge(placements, places, i - len, i - len + findj + 1, j, j + len + 1);
+                i -= len - findj; //rollback
+                it = []; jt = []; len = 0;
+            } else {
+                it.push([xi, yi]);
+                jt.push([xj, yj]);
+                len++;
+            }
+        }
+        i++; j--;
+    }
+    //console.log(temp.slice(i - len, j + len + 1));
+    placements.push(...places.slice(i - len, j + len + 1));
+    console.timeEnd('reorder placements');
 	return placements;
 }
 
@@ -176,7 +176,7 @@ function genGrid(segments, n, r) {
 	const cellCount = Math.pow(2, n);
 	let gridSegs = Array(cellCount * cellCount).fill().map(() => []);
 	let gridParts = Array(cellCount * cellCount).fill().map(() => []);
-	splittedSegments.map(({ seg, parts }) =>
+	splittedSegments.map(({seg, parts}) =>
 		parts.map(part => {
 			const indexes = [
 				Math.round(part[0][0] / r - 0.5) +
@@ -199,7 +199,7 @@ function genGrid(segments, n, r) {
 		gridSegs[Math.round(x/r - 0.5) + Math.round(y/r - 0.5) * cellCount] || [];
 	const getGridParts = (x, y) =>
 		gridParts[Math.round(x/r - 0.5) + Math.round(y/r - 0.5) * cellCount] || [];
-	let placements = splittedSegments.flatMap(({ parts }) => parts);
+	let placements = splittedSegments.flatMap(({parts}) => parts);
 	// Ignore short segments for painting placement
 	placements = placements.filter(([[ax, ay], [bx, by]]) => Math.hypot(ax - bx, ay - by) > 1);
 	placements = reorderPlacements(placements, r);
@@ -214,7 +214,7 @@ function genGrid(segments, n, r) {
 		return index;
 	};
 	console.timeEnd('gen grid');
-	return { getGridSegments, getGridParts, getAreaIndex, placements };
+	return {getGridSegments, getGridParts, getAreaIndex, placements};
 }
 
 module.exports = function (n = mapSize, r = cellSize, w = wallThickness, m = wallRemoval, h = mapHeight) {
@@ -226,7 +226,7 @@ module.exports = function (n = mapSize, r = cellSize, w = wallThickness, m = wal
 		.map(([[x1, y1], [x2, y2]]) => [Math.sign(y1 - y2), 0, Math.sign(x2 - x1)])
 		.flatMap((v) => Array(4).fill(v));
 	let position = segments.flat().flatMap(([x, y]) => [[x, 0, y], [x, h, y]]);
-	let { getAreaIndex, getGridSegments, getGridParts, placements } = genGrid(segments, n, r);
+	let {getAreaIndex, getGridSegments, getGridParts, placements} = genGrid(segments, n, r);
 	//Add floor and ceilling
 	normal.push([0, -1, 0], [0, -1, 0], [0, -1, 0], [0, -1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0]);
 	position.push([0, h, 0], [0, h, s], [s, h, 0], [s, h, s], [0, 0, 0], [s, 0, 0], [0, 0, s], [s, 0, s]);
