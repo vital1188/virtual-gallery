@@ -2,23 +2,23 @@
     "images": [
         {
             "title": "1",
-            "file": "https://res.cloudinary.com/dlqfawszf/image/upload/v1728884280/IMG_4008_jm4odm.png"
+            "file": "https://res.cloudinary.com/dlqfawszf/image/upload//artworks/1.png"
         },
         {
             "title": "2",
-            "file": "https://res.cloudinary.com/dlqfawszf/image/upload/v1728884278/IMG_3776_t6yog9.png"
+            "file": "https://res.cloudinary.com/dlqfawszf/image/upload//artworks/2.png"
         },
         {
             "title": "3",
-            "file": "https://res.cloudinary.com/dlqfawszf/image/upload/v1728884273/IMG_2976_jbspgw.jpg"
+            "file": "https://res.cloudinary.com/dlqfawszf/image/upload//artworks/3.png"
         },
         {
             "title": "4",
-            "file": "https://res.cloudinary.com/dlqfawszf/image/upload/v1728884270/55_bhs7yt.jpg"
+            "file": "https://res.cloudinary.com/dlqfawszf/image/upload//artworks/4.png"
         },
         {
             "title": "5",
-            "file": "https://res.cloudinary.com/dlqfawszf/image/upload/v1728884274/IMG_3026_qa24yc.jpg"
+            "file": "https://res.cloudinary.com/dlqfawszf/image/upload//artworks/5.png"
         }
     ]
 }
