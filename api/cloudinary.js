@@ -1,11 +1,14 @@
 'use strict';
+
 const cloudinary = require('cloudinary').v2;
 
 module.exports = {
     fetchList: async function (from, count) {
         // Implement logic to fetch list from Cloudinary if necessary
-        // For static lists, continue using images.json
-        return []; // Placeholder
+        // For static lists, you can continue using images.json
+        // Example: Return a subset of image public IDs
+        const images = require("../images/images.json").images;
+        return images.slice(from, from + count).map(img => img.file);
     },
     fetchImage: async function (publicId, advicedResolution) {
         try {
@@ -22,7 +25,7 @@ module.exports = {
             }
             const blob = await response.blob();
             return {
-                title: publicId, // Adjust as needed
+                title: publicId, // Adjust title as needed
                 image: blob
             };
         } catch (error) {

@@ -1,4 +1,7 @@
 'use strict';
+
+require('dotenv').config(); // Load environment variables
+
 const cloudinary = require('cloudinary').v2;
 
 // Configure Cloudinary
@@ -9,8 +12,8 @@ cloudinary.config({
 });
 
 module.exports = {
-    default: "cloudinary",
+    default: "local",
     artic: require("./artic"),
     local: require("./local"),
-    cloudinary: require("./cloudinary") // New module
+    cloudinary: require("./cloudinary") // Added Cloudinary module
 };
