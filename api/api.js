@@ -12,7 +12,7 @@ cloudinary.config({
 });
 
 module.exports = {
-    default: "local",
+    default: "cloudinary",
     artic: require("./artic"),
     local: require("./local"),
     cloudinary: require("./cloudinary") // Added Cloudinary module
