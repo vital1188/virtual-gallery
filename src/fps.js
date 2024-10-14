@@ -39,23 +39,6 @@ const planeProject = (org, dir, plane) => {
 	return { dist, intersection };
 };
 
-const wallProject = (org, dir, a, b) => {
-	// Calculate the vertical place passing through A and B
-	const vx = a[0] - b[0], vz = a[1] - b[1];
-	const nx = -vz, nz = vx;
-	const wAB = a[0] * nx + a[1] * nz;
-	// Project to the plane
-	let { dist, intersection: i } = planeProject(org, dir, [nx, 0, nz, wAB]);
-	// Verify it's between A and B
-	const wA = a[0] * vx + a[1] * vz;
-	const wB = b[0] * vx + b[1] * vz;
-	const wI = i[0] * vx + i[2] * vz;
-	if ((wI > wA) + (wI > wB) !== 1)
-		dist = Infinity;
-	//console.log(dist, i);
-	return { a, b, dist, intersection: i };
-};
-
 const lerp = (x, a, b) => (1 - x) * a + x * b;
 
 const easeInOutQuad = x =>
@@ -125,7 +108,7 @@ module.exports = function ({ getGridSegments, getGridParts }, fovY) {
 				let { intersection: floorPos, dist: floorDist } = planeProject(pos, touchDir, [0, 1, 0, 0]);
 				let { dist: ceilingDist } = planeProject(pos, touchDir, [0, 1, 0, yLimitTouch]);
 				//console.log(floorDist, ceilingDist);
-				// get the walls suceptibles to intersect with the raycast
+				// get the walls susceptible to intersect with the raycast
 				let [x, , z] = pos;
 				let [dx, , dz] = touchDir;
 				dx /= Math.hypot(dx, dz);
@@ -135,7 +118,7 @@ module.exports = function ({ getGridSegments, getGridParts }, fovY) {
 					x += dx * rayStep; z += dz * rayStep;
 					walls = [...walls, ...getGridSegments(x, z)];
 				}
-				console.log([...new Set(walls)]);
+				//console.log([...new Set(walls)]);
 				// project to walls
 				let intersections = [...new Set(walls)]
 					.map(([a, b]) => wallProject(pos, touchDir, a, b))
@@ -283,7 +266,7 @@ module.exports = function ({ getGridSegments, getGridParts }, fovY) {
 				//console.log(t, tpProgress, pos);
 				vec3.set(pos, lerp(t, startPos[0], endPos[0]), pos[1], lerp(t, startPos[2], endPos[2]));
 			}
-			// Filter mouse mouvement
+			// Filter mouse movement
 			fmouse[0] = rotationFilter * mouse[0] + (1 - rotationFilter) * fmouse[0];
 			fmouse[1] = rotationFilter * mouse[1] + (1 - rotationFilter) * fmouse[1];
 			// Update view
