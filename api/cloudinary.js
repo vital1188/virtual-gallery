@@ -1,12 +1,10 @@
+// api/cloudinary.js
 'use strict';
-
 const cloudinary = require('cloudinary').v2;
 
 module.exports = {
     fetchList: async function (from, count) {
-        // Implement logic to fetch list from Cloudinary if necessary
-        // For static lists, you can continue using images.json
-        // Example: Return a subset of image public IDs
+        // Fetch a subset of images from images.json
         const images = require("../images/images.json").images;
         return images.slice(from, from + count).map(img => img.file);
     },

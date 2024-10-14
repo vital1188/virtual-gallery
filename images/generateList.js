@@ -1,8 +1,9 @@
+// images/generateList.js
 const fs = require('fs');
 
 // Replace with your Cloudinary cloud name and folder
 const CLOUDINARY_CLOUD_NAME = 'dlqfawszf';
-const CLOUDINARY_FOLDER = 'Home/artworks'; // Folder where images are uploaded
+const CLOUDINARY_FOLDER = '/artworks'; // Folder where images are uploaded
 const IMAGE_EXTENSION = ['.png', '.jpg', '.jpeg', '.gif']; // Supported image extensions
 
 fs.readdir('./images', (err, files) => {

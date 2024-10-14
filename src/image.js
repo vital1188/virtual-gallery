@@ -5,6 +5,7 @@ const selectedApi = new URLSearchParams(window.location.search).get("api");
 const dataAccess = api[selectedApi] || api[api.default];
 const text = require('./text');
 
+
 let paintingCache = {};
 let unusedTextures = [];
 

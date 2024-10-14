@@ -1,0 +1,24 @@
+{
+    "images": [
+        {
+            "title": "1",
+            "file": "https://res.cloudinary.com/dlqfawszf/image/upload//artworks/1.png"
+        },
+        {
+            "title": "2",
+            "file": "https://res.cloudinary.com/dlqfawszf/image/upload//artworks/2.png"
+        },
+        {
+            "title": "3",
+            "file": "https://res.cloudinary.com/dlqfawszf/image/upload//artworks/3.png"
+        },
+        {
+            "title": "4",
+            "file": "https://res.cloudinary.com/dlqfawszf/image/upload//artworks/4.png"
+        },
+        {
+            "title": "5",
+            "file": "https://res.cloudinary.com/dlqfawszf/image/upload//artworks/5.png"
+        }
+    ]
+}

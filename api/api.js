@@ -1,3 +1,4 @@
+// api/api.js
 'use strict';
 
 require('dotenv').config(); // Load environment variables
@@ -11,9 +12,10 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+// api/api.js
 module.exports = {
-    default: "cloudinary",
-    artic: require("./artic"),
+    default: "cloudinary", // Set 'cloudinary' as default if preferred
     local: require("./local"),
-    cloudinary: require("./cloudinary") // Added Cloudinary module
+    cloudinary: require("./cloudinary")
 };
+
