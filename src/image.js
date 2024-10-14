@@ -1,4 +1,3 @@
-// src/image.js
 'use strict';
 
 const api = require('../api/api');
@@ -11,8 +10,8 @@ let unusedTextures = [];
 
 const dynamicQualThreshold = 2;
 function dynamicQual(quality) {
-    if(!navigator.connection || navigator.connection.downlink < dynamicQualThreshold) {
-        quality = (quality == 'high') ? 'mid' : 'low';
+    if (!navigator.connection || navigator.connection.downlink < dynamicQualThreshold) {
+        quality = (quality === 'high') ? 'mid' : 'low';
     }
     return quality;
 }
@@ -26,7 +25,7 @@ let aniso = false;
 
 const emptyImage = (regl) => [
     (unusedTextures.pop() || regl.texture)([[[200, 200, 200]]]),
-    _=>(unusedTextures.pop() || regl.texture)([[[0, 0, 0, 0]]]),
+    _ => (unusedTextures.pop() || regl.texture)([[[0, 0, 0, 0]]]),
     1
 ];
 
@@ -37,10 +36,11 @@ async function loadImage(regl, p, res) {
         ) : 0;
         console.log(aniso);
     }
-    
+
     let image, title;
     try {
-        const data = await dataAccess.fetchImage(p.file, dynamicQual(res));
+        const data = await dataAccess.fetchImage(p, dynamicQual(res));
+        if (!data) throw new Error("No data returned");
         title = data.title;
         // Resize image to a power of 2 to use mipmap (faster than createImageBitmap resizing)
         image = await createImageBitmap(data.image);
@@ -48,17 +48,18 @@ async function loadImage(regl, p, res) {
     } catch(e) {
         // Try again with a lower resolution, otherwise return an empty image
         console.error(e);
-        return res == "high" ? await loadImage(regl, p, "low") : emptyImage(regl);
+        return res === "high" ? await loadImage(regl, p, "low") : emptyImage(regl);
     }
 
-    return [(unusedTextures.pop() || regl.texture)({
+    return [
+        (unusedTextures.pop() || regl.texture)({
             data: resizeCanvas,
             min: 'mipmap',
             mipmap: 'nice',
             aniso,
             flipY: true
         }),
-        width=>text.init((unusedTextures.pop() || regl.texture), title, width),
+        width => text.init((unusedTextures.pop() || regl.texture), title, width),
         image.width / image.height
     ];
 }
@@ -69,18 +70,20 @@ module.exports = {
         dataAccess.fetchList(from, count).then(paintings => {
             count = paintings.length;
             paintings.map(p => {
-                if (paintingCache[p.file]) {
+                if (paintingCache[p.image_id]) {
                     if (--count === 0)
                         cbAll();
                     return;
                 }
-                paintingCache[p.file] = p;
+                paintingCache[p.image_id] = p;
                 loadImage(regl, p, res).then(([tex, textGen, aspect]) => {
-                    cbOne({ ...p, tex, textGen, aspect });
+                    if (tex) { // Ensure texture loaded successfully
+                        cbOne({ ...p, tex, textGen, aspect });
+                    }
                     if (--count === 0)
                         cbAll();
                 });
-            })
+            });
         });
     },
     load: (regl, p, res = "low") => {

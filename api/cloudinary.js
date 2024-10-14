@@ -1,35 +1,32 @@
 'use strict';
 
-const cloudinary = require('cloudinary').v2;
+// Environment variables for security
+const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_UPLOAD_PRESET = process.env.CLOUDINARY_UPLOAD_PRESET;
+
+// Define resolutions for dynamic quality
+const resolutions = { "low": 400, "mid": 843, "high": 1686 };
 
 module.exports = {
-    // Fetch a list of image URLs from images.json starting from 'from' index and fetch 'count' images
-    fetchList: async function (from, count) {
+    fetchList: async function(from, count) {
         const images = require("../images/images.json").images;
-        return images.slice(from, from + count).map(img => img.file);
+        return images.slice(from, from + count);
     },
-    // Fetch a specific image using Cloudinary transformations based on the advised resolution
-    fetchImage: async function (publicId, advicedResolution) {
+    fetchImage: async function(obj, advisedResolution) {
+        const width = resolutions[advisedResolution] || resolutions['low'];
+        // Construct Cloudinary URL with transformations
+        const url = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/image/upload/c_scale,w_${width}/${obj.file}`;
         try {
-            const url = cloudinary.url(publicId, {
-                width: advicedResolution === 'high' ? 1686 :
-                       advicedResolution === 'mid' ? 843 : 400,
-                height: 'auto',
-                fetch_format: 'auto',
-                quality: 'auto'
-            });
             const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch image: ${response.statusText}`);
-            }
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const blob = await response.blob();
             return {
-                title: publicId, // You can adjust the title extraction as needed
+                title: obj.title,
                 image: blob
             };
-        } catch (error) {
-            console.error(error);
-            throw error;
+        } catch(e) {
+            console.error(`Error fetching image ${url}:`, e);
+            return null;
         }
     }
 };
