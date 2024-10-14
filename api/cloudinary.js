@@ -2,25 +2,7 @@
 
 const API_ENDPOINT = '/.netlify/functions/getArtworks'; // Add this line
 
-// List of artworks with Cloudinary URLs
-const artworks = [
-    {
-        "id": 1,
-        "title": "Sunset Overdrive",
-        "url": "https://res.cloudinary.com/dlqfawszf/image/upload/v1728884280/IMG_4008_jm4odm.png"
-    },
-    {
-        "id": 2,
-        "title": "Abstract Thoughts",
-        "url": "https://res.cloudinary.com/dlqfawszf/image/upload/v1728884278/IMG_3776_t6yog9.png"
-    },
-    {
-        "id": 3,
-        "title": "Modern Landscape",
-        "url": "https://res.cloudinary.com/dlqfawszf/image/upload/v1728884276/IMG_3311_mblyqk.jpg"
-    }
-    // Add more artworks as needed
-];
+
 
 module.exports = {
     /**
