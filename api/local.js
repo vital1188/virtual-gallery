@@ -1,14 +1,18 @@
-'strict mode';
+'use strict';
 
-// Local images
-const images = require("../images/images.json").images.map((img,i)=>({...img, image_id:i}));
+// Local images from Cloudinary
+const images = require("../images/images.json").images.map((img, i) => ({ ...img, image_id: i }));
 module.exports = {
     fetchList: async function (from, count) {
-        return images.slice(from, from + count);//.map((img,i)=>({...img, image_id:i+from}));
+        return images.slice(from, from + count);
     },
     fetchImage: async function (obj, advicedResolution) {
-        const url = "images/" + obj.file;
-        const blob = await fetch(url).then(res => res.blob());
+        const url = obj.file; // Cloudinary URL
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch image: ${response.statusText}`);
+        }
+        const blob = await response.blob();
         return {
             title: obj.title,
             image: blob

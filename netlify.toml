@@ -1,16 +1,8 @@
-# netlify.toml
-
 [build]
-  # The command Netlify runs to build your site
   command = "npm run build"
+  publish = "."
 
-  # The directory where the build command outputs the final files
-  # If you modified the build script to output to 'dist', use "dist"
-  # Otherwise, if the output is in the root directory, use "."
-  publish = "dist"
-
-# Redirect rules for single-page applications (SPA)
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/build.html"
   status = 200
