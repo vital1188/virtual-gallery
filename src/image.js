@@ -1,3 +1,4 @@
+// src/image.js
 'use strict';
 
 const api = require('../api/api');
@@ -10,18 +11,11 @@ let unusedTextures = [];
 
 const dynamicQualThreshold = 2;
 function dynamicQual(quality) {
-    if(!navigator.connection || navigator.connection.downlink < dynamicQualThreshold) {
+    if (!navigator.connection || navigator.connection.downlink < dynamicQualThreshold) {
         quality = (quality === 'high') ? 'mid' : 'low';
     }
     return quality;
 }
-
-const resizeCanvas = document.createElement('canvas');
-resizeCanvas.width = resizeCanvas.height = 2048;
-const ctx = resizeCanvas.getContext('2d');
-ctx.mozImageSmoothingEnabled = false;
-ctx.webkitImageSmoothingEnabled = false;
-let aniso = false;
 
 const emptyImage = (regl) => [
     (unusedTextures.pop() || regl.texture)([[[200, 200, 200]]]),
@@ -29,38 +23,37 @@ const emptyImage = (regl) => [
     1
 ];
 
+// Load image from Cloudinary URL
 async function loadImage(regl, p, res) {
-    if (aniso === false) {
-        aniso = regl.hasExtension('EXT_texture_filter_anisotropic') ? regl._gl.getParameter(
-            regl._gl.getExtension('EXT_texture_filter_anisotropic').MAX_TEXTURE_MAX_ANISOTROPY_EXT
-        ) : 0;
-        console.log(aniso);
-    }
-    
     let image, title;
     try {
         const data = await dataAccess.fetchImage(p, dynamicQual(res));
         title = data.title;
-        // Resize image to a power of 2 to use mipmap (faster than createImageBitmap resizing)
-        image = await createImageBitmap(data.image);
-        ctx.drawImage(image, 0, 0, resizeCanvas.width, resizeCanvas.height);
-    } catch(e) {
-        // Try again with a lower resolution, otherwise return an empty image
-        console.error(e);
-        return res === "high" ? await loadImage(regl, p, "low") : emptyImage(regl);
-    }
+        image = data.image; // Cloudinary URL
 
-    return [
-        (unusedTextures.pop() || regl.texture)({
-            data: resizeCanvas,
-            min: 'mipmap',
-            mipmap: 'nice',
-            aniso,
-            flipY: true
-        }),
-        width => text.init((unusedTextures.pop() || regl.texture), title, width),
-        image.width / image.height
-    ];
+        // Create a new Image element
+        const img = new Image();
+        img.crossOrigin = 'anonymous'; // Enable CORS if needed
+        img.src = image;
+        await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+        });
+
+        return [
+            (unusedTextures.pop() || regl.texture)({
+                data: img,
+                min: 'mipmap',
+                mipmap: 'nice',
+                flipY: true
+            }),
+            width => text.init((unusedTextures.pop() || regl.texture)(), title, width),
+            img.width / img.height
+        ];
+    } catch (e) {
+        console.error(e);
+        return res === "high" ? await loadImage(regl, p, "mid") : emptyImage(regl);
+    }
 }
 
 module.exports = {
