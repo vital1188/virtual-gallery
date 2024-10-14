@@ -105,4 +105,12 @@ dist
 
 # Build file
 build.html
-images/images.json
+
+# Ignore local image files except images.json
+/images/*.png
+/images/*.jpg
+/images/*.jpeg
+/images/*.gif
+
+# Allow tracking of images.json
+!images/images.json
