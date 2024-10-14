@@ -11,7 +11,7 @@ let unusedTextures = [];
 const dynamicQualThreshold = 2;
 function dynamicQual(quality) {
     if(!navigator.connection || navigator.connection.downlink < dynamicQualThreshold) {
-        quality = (quality == 'high') ? 'mid' : 'low';
+        quality = (quality === 'high') ? 'mid' : 'low';
     }
     return quality;
 }
@@ -25,7 +25,7 @@ let aniso = false;
 
 const emptyImage = (regl) => [
     (unusedTextures.pop() || regl.texture)([[[200, 200, 200]]]),
-    _=>(unusedTextures.pop() || regl.texture)([[[0, 0, 0, 0]]]),
+    _ => (unusedTextures.pop() || regl.texture)([[[0, 0, 0, 0]]]),
     1
 ];
 
@@ -47,7 +47,7 @@ async function loadImage(regl, p, res) {
     } catch(e) {
         // Try again with a lower resolution, otherwise return an empty image
         console.error(e);
-        return res == "high" ? await loadImage(regl, p, "low") : emptyImage(regl);
+        return res === "high" ? await loadImage(regl, p, "low") : emptyImage(regl);
     }
 
     return [(unusedTextures.pop() || regl.texture)({
@@ -57,7 +57,7 @@ async function loadImage(regl, p, res) {
             aniso,
             flipY: true
         }),
-        width=>text.init((unusedTextures.pop() || regl.texture), title, width),
+        width => text.init((unusedTextures.pop() || regl.texture), title, width),
         image.width / image.height
     ];
 }
@@ -68,12 +68,12 @@ module.exports = {
         dataAccess.fetchList(from, count).then(paintings => {
             count = paintings.length;
             paintings.map(p => {
-                if (paintingCache[p.url]) {
+                if (paintingCache[p.image_id]) {
                     if (--count === 0)
                         cbAll();
                     return;
                 }
-                paintingCache[p.url] = p;
+                paintingCache[p.image_id] = p;
                 loadImage(regl, p, res).then(([tex, textGen, aspect]) => {
                     cbOne({ ...p, tex, textGen, aspect });
                     if (--count === 0)
