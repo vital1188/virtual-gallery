@@ -1,8 +1,9 @@
+# netlify.toml
 [build]
-  functions = "netlify/functions"
+  command = "npm run build"
   publish = "."
 
 [[redirects]]
-  from = "/.netlify/functions/*"
-  to = "/.netlify/functions/:splat"
+  from = "/*"
+  to = "/index.html"
   status = 200
