@@ -11,7 +11,7 @@ const dynamicResPeriod = 3000;
 let dynamicRes = "high";
 let dynamicResTimer;
 
-const culling = (ppos, pangle, fovx, {vseg, angle}) => {
+const culling = (ppos, pangle, fovx, { vseg, angle }) => {
     const sx1 = vseg[0][0] - ppos[0];
     const sy1 = vseg[0][1] - ppos[2];
     const sx2 = vseg[1][0] - ppos[0];
@@ -26,7 +26,7 @@ const culling = (ppos, pangle, fovx, {vseg, angle}) => {
     return true;
 };
 
-module.exports = (regl, {placements, getAreaIndex}) => {
+module.exports = (regl, { placements, getAreaIndex }) => {
     //console.log(areas);
     let batch = [], shownBatch = [];
     let fetching = true;
@@ -68,7 +68,9 @@ module.exports = (regl, {placements, getAreaIndex}) => {
         mat4.fromTranslation(textmodel, [pos[0], 1.7 - globalScale, pos[2]]);
         mat4.scale(textmodel, textmodel, [2,2,2]);
         mat4.rotateY(textmodel, textmodel, -angle);
-        batch.push({ ...p, vseg, angle, model, textmodel, text, width, textGen:null });
+        const tex = p.tex;
+        const textTex = p.text;
+        batch.push({ ...p, vseg, angle, model, textmodel, text, width, textGen: null, tex, textTex });
     };
     // Fetch the first textures
     texture.fetch(regl, 20, dynamicRes, loadPainting, () => fetching = false);

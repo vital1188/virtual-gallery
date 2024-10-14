@@ -57,7 +57,7 @@ async function loadImage(regl, p, res) {
 			aniso,
 			flipY: true
 		}),
-		width=>text.init((unusedTextures.pop() || regl.texture), title, width),
+		width => text.init((unusedTextures.pop() || regl.texture), title, width),
 		image.width / image.height
 	];
 }

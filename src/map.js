@@ -94,7 +94,7 @@ function splitSegments(segments) {
         // Calculate subsegment length
         let l = Math.hypot(s[1][0] - s[0][0], s[1][1] - s[0][1]);
         l = Math.ceil(l / 8 - 0.3);
-        if (l <= 0) return {parts: [s], seg:s};
+        if (l <= 0) return { parts: [s], seg: s };
         // Lerp coordinates
         let res = [];
         for (let t = 0; t <= 1; t += 1 / l)
@@ -176,7 +176,7 @@ function genGrid(segments, n, r) {
 	const cellCount = Math.pow(2, n);
 	let gridSegs = Array(cellCount * cellCount).fill().map(() => []);
 	let gridParts = Array(cellCount * cellCount).fill().map(() => []);
-	splittedSegments.map(({seg, parts}) =>
+	splittedSegments.map(({ seg, parts }) =>
 		parts.map(part => {
 			const indexes = [
 				Math.round(part[0][0] / r - 0.5) +
@@ -199,7 +199,7 @@ function genGrid(segments, n, r) {
 		gridSegs[Math.round(x/r - 0.5) + Math.round(y/r - 0.5) * cellCount] || [];
 	const getGridParts = (x, y) =>
 		gridParts[Math.round(x/r - 0.5) + Math.round(y/r - 0.5) * cellCount] || [];
-	let placements = splittedSegments.flatMap(({parts}) => parts);
+	let placements = splittedSegments.flatMap(({ parts }) => parts);
 	// Ignore short segments for painting placement
 	placements = placements.filter(([[ax, ay], [bx, by]]) => Math.hypot(ax - bx, ay - by) > 1);
 	placements = reorderPlacements(placements, r);
@@ -214,7 +214,7 @@ function genGrid(segments, n, r) {
 		return index;
 	};
 	console.timeEnd('gen grid');
-	return {getGridSegments, getGridParts, getAreaIndex, placements};
+	return { getGridSegments, getGridParts, getAreaIndex, placements };
 }
 
 module.exports = function (n = mapSize, r = cellSize, w = wallThickness, m = wallRemoval, h = mapHeight) {
@@ -226,8 +226,8 @@ module.exports = function (n = mapSize, r = cellSize, w = wallThickness, m = wal
 		.map(([[x1, y1], [x2, y2]]) => [Math.sign(y1 - y2), 0, Math.sign(x2 - x1)])
 		.flatMap((v) => Array(4).fill(v));
 	let position = segments.flat().flatMap(([x, y]) => [[x, 0, y], [x, h, y]]);
-	let {getAreaIndex, getGridSegments, getGridParts, placements} = genGrid(segments, n, r);
-	//Add floor and ceiling
+	let { getAreaIndex, getGridSegments, getGridParts, placements } = genGrid(segments, n, r);
+	//Add floor and ceilling
 	normal.push([0, -1, 0], [0, -1, 0], [0, -1, 0], [0, -1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0]);
 	position.push([0, h, 0], [0, h, s], [s, h, 0], [s, h, s], [0, 0, 0], [s, 0, 0], [0, 0, s], [s, 0, s]);
 	let elements = Array(position.length / 4)
