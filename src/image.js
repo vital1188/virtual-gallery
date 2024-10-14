@@ -11,7 +11,7 @@ let unusedTextures = [];
 const dynamicQualThreshold = 2;
 function dynamicQual(quality) {
     if(!navigator.connection || navigator.connection.downlink < dynamicQualThreshold) {
-        quality = (quality == 'high') ? 'mid' : 'low';
+        quality = (quality === 'high') ? 'mid' : 'low';
     }
     return quality;
 }
@@ -84,12 +84,12 @@ module.exports = {
         dataAccess.fetchList(from, count).then(paintings => {
             count = paintings.length;
             paintings.forEach(p => {
-                if (paintingCache[p.image_id]) {
+                if (paintingCache[p.id]) {
                     if (--count === 0)
                         cbAll();
                     return;
                 }
-                paintingCache[p.image_id] = p;
+                paintingCache[p.id] = p;
                 loadImage(regl, p, res).then(([tex, textGen, aspect]) => {
                     cbOne({ ...p, tex, textGen, aspect });
                     if (--count === 0)

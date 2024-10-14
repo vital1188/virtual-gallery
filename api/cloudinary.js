@@ -3,29 +3,43 @@
 // List of artworks with Cloudinary URLs
 const artworks = [
     {
+        "id": 1,
         "title": "Sunset Overdrive",
         "url": "https://res.cloudinary.com/dlqfawszf/image/upload/v1728884280/IMG_4008_jm4odm.png"
     },
     {
+        "id": 2,
         "title": "Abstract Thoughts",
         "url": "https://res.cloudinary.com/dlqfawszf/image/upload/v1728884278/IMG_3776_t6yog9.png"
     },
     {
+        "id": 3,
         "title": "Modern Landscape",
         "url": "https://res.cloudinary.com/dlqfawszf/image/upload/v1728884276/IMG_3311_mblyqk.jpg"
-    },
+    }
     // Add more artworks as needed
 ];
 
 module.exports = {
     /**
-     * Fetch a list of artworks.
+     * Fetch a list of artworks with pagination.
      * @param {number} from - Starting index.
      * @param {number} count - Number of artworks to fetch.
      * @returns {Promise<Array>} - Array of artwork objects.
      */
     fetchList: async function (from, count) {
-        return artworks.slice(from, from + count);
+        try {
+            const response = await fetch(`${API_ENDPOINT}?from=${from}&count=${count}`);
+            if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.statusText}`);
+            }
+            const data = await response.json();
+            console.log(`Fetched ${data.length} artworks from index ${from}`);
+            return data;
+        } catch (error) {
+            console.error('Error fetching artworks list:', error);
+            return [];
+        }
     },
 
     /**
@@ -52,11 +66,12 @@ module.exports = {
             }
             const blob = await response.blob();
             return {
+                id: obj.id,
                 title: obj.title,
                 image: blob
             };
         } catch (error) {
-            console.error(error);
+            console.error(`Error fetching image for "${obj.title}":`, error);
             throw error;
         }
     }
