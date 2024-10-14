@@ -1,21 +1,16 @@
-// api/local.js
 'use strict';
 
-// Local images from Cloudinary
+// Import images from images.json and assign unique image IDs
 const images = require("../images/images.json").images.map((img, i) => ({ ...img, image_id: i }));
 
 module.exports = {
+    // Fetch a list of images starting from 'from' index and fetch 'count' images
     fetchList: async function (from, count) {
         return images.slice(from, from + count);
     },
-    fetchList: async function (from, count) {
-        const list = images.slice(from, from + count);
-        console.log('Fetching list from local (Cloudinary):', list);
-        return list;
-    },
+    // Fetch a specific image using its Cloudinary URL
     fetchImage: async function (obj, advicedResolution) {
-        console.log('Fetching image:', obj.file);
-        const url = obj.file; // Cloudinary URL
+        const url = obj.file; // Cloudinary URL from images.json
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`Failed to fetch image: ${response.statusText}`);
