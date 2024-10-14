@@ -1,33 +1,18 @@
 'use strict';
-require('dotenv').config();
 
-// Local images from Cloudinary
-const images = require("../images/images.json").images.map(image => ({
-    title: image.title,
-    url: `${process.env.CLOUDINARY_URL}${image.public_id}.${image.format}`
-}));
-
+// Local images replaced with Cloudinary URLs
+const images = require("../images/images.json").images.map((img, i) => ({ ...img, image_id: i }));
 module.exports = {
     fetchList: async function (from, count) {
         return images.slice(from, from + count);
     },
     fetchImage: async function (obj, advicedResolution) {
-        try {
-            // Apply transformations if needed, e.g., resizing
-            const transformedUrl = `${obj.url}`;
-            const response = await fetch(transformedUrl);
-            if (!response.ok) throw new Error('Network response was not ok');
-            const blob = await response.blob();
-            return {
-                title: obj.title,
-                image: blob
-            };
-        } catch (error) {
-            console.error('Error fetching image from Cloudinary:', error);
-            return {
-                title: obj.title,
-                image: null
-            };
-        }
+        // Use the full Cloudinary URL from images.json
+        const url = obj.file;
+        const blob = await fetch(url).then(res => res.blob());
+        return {
+            title: obj.title,
+            image: blob
+        };
     }
 };
