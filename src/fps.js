@@ -121,11 +121,11 @@ module.exports = function ({getGridSegments, getGridParts}, fovY) {
 				vec3.transformMat4(touchDir, touchDir, mat4.invert(tmp, view));
 				vec3.sub(touchDir, touchDir, pos);
 				vec3.normalize(touchDir, touchDir);
-				// project to the floor and the ceilling
+				// project to the floor and the ceiling
 				let {intersection: floorPos, dist: floorDist} = planeProject(pos, touchDir, [0,1,0,0]);
 				let {dist: ceilingDist} = planeProject(pos, touchDir, [0,1,0,yLimitTouch]);
 				//console.log(floorDist, ceilingDist);
-				// get the walls suceptibles to intersect with the raycast
+				// get the walls susceptible to intersect with the raycast
 				let [x,,z] = pos;
 				let [dx,,dz] = touchDir;
 				dx /= Math.hypot(dx, dz);
@@ -283,7 +283,7 @@ module.exports = function ({getGridSegments, getGridParts}, fovY) {
 				//console.log(t, tpProgress, pos);
 				vec3.set(pos, lerp(t, startPos[0], endPos[0]), pos[1],  lerp(t, startPos[2], endPos[2]));
 			}
-			// Filter mouse mouvement
+			// Filter mouse movement
 			fmouse[0] = rotationFilter * mouse[0] + (1 - rotationFilter) * fmouse[0];
 			fmouse[1] = rotationFilter * mouse[1] + (1 - rotationFilter) * fmouse[1];
 			// Update view

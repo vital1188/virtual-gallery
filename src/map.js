@@ -227,7 +227,7 @@ module.exports = function (n = mapSize, r = cellSize, w = wallThickness, m = wal
 		.flatMap((v) => Array(4).fill(v));
 	let position = segments.flat().flatMap(([x, y]) => [[x, 0, y], [x, h, y]]);
 	let {getAreaIndex, getGridSegments, getGridParts, placements} = genGrid(segments, n, r);
-	//Add floor and ceilling
+	//Add floor and ceiling
 	normal.push([0, -1, 0], [0, -1, 0], [0, -1, 0], [0, -1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0]);
 	position.push([0, h, 0], [0, h, s], [s, h, 0], [s, h, s], [0, 0, 0], [s, 0, 0], [0, 0, s], [s, 0, s]);
 	let elements = Array(position.length / 4)

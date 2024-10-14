@@ -1,8 +1,7 @@
 'use strict';
 
 module.exports = {
-    default: "cloudinary",
+    default: "local",
     artic: require("./artic"),
-    local: require("./local"),
-    cloudinary: require("./cloudinary") 
+    local: require("./local")
 };
